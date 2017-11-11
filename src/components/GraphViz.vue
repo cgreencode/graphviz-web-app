@@ -8,73 +8,62 @@
           <p><small>This app is using cookies for user traffic tracking. By closing this message you're accepting the usage. Don't like tracking - click <a href="javascript:gaDisableTracking()">here</a> to disable.</small></p>
       </alert>
       <div class="row" v-if="loaded">
-
-        <multipane class="custom-resizer" layout="vertical" v-on:paneResize="resizeRender">
-          <div class="pane left-pane" :class="{full_width: !largeScreen}">
-            <!-- todo add initial width & save width in localstorage -->
-            <!-- <div class="col-md-4" v-if="!isMaximizedRender" :style="{width: editorWidth}"> -->
-            <!-- <div class="col-md-4" v-if="!isMaximizedRender" :style="{width: editorWidth}"> -->
-              <nav class="navbar navbar-default">
-                  <div class="navbar-header pull-left">
-                    <a class="navbar-brand">Definition</a>
-                  </div>
-                  <div class="navbar-header pull-right">
-                  <div class="btn-group navbar-btn" role="group" aria-label="toolbar">
-                    <button type="button" @click="clear()" title="Clear graph data input" class="btn btn-small btn-default">
-                      <span class="glyphicon glyphicon-trash"></span></button>
-                      <button type="button" :disabled="!localDotData"
-                      :title="!localDotData? 'Nothing to save!': 'Save your graph in browser'"
-                      @click="openSave()" class="btn btn-small btn-default">
-                      <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span></button>
-                      <dropdown trigger-tag="span" class="btn btn-small btn-default dropdown-toggle">
-                        <span slot="trigger"
-                        title="Save as"
-                        aria-hidden="true"><span class="glyphicon glyphicon-floppy-disk"></span>...</span>
-                        <div class="dropdown-menu pull-right">
-                          <div class="list-group">
-                            <a href="#" class="list-group-item" @click.prevent="saveTxt">
-                              Download textfile
-                            </a>
-                          </div>
-                        </div>
-                      </dropdown>
-                    </div>
-                  </div>
-                </nav>
-                <div v-if="renderErrorMessage!=''" class="render-error"><small>{{renderErrorMessage}}</small>
+        <div class="col-md-4">
+          <nav class="navbar navbar-default">
+              <div class="navbar-header pull-left">
+                <a class="navbar-brand">Definition</a>
+              </div>
+              <div class="navbar-header pull-right">
+              <div class="btn-group navbar-btn" role="group" aria-label="toolbar">
+                <button type="button" @click="clear()" title="Clear graph data input" class="btn btn-small btn-default">
+                  <span class="glyphicon glyphicon-trash"></span></button>
+                  <button type="button" :disabled="!localDotData"
+                  :title="!localDotData? 'Nothing to save!': 'Save your graph in browser'"
+                  @click="openSave()" class="btn btn-small btn-default">
+                  <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span></button>
+                  <dropdown tag="button" trigger-tag="span" class="btn btn-small btn-default dropdown-toggle">
+                    <span slot="trigger"
+                    title="Save as"
+                    class="glyphicon glyphicon-floppy-disk"
+                    aria-hidden="true">...</span>
+                    <ul class="list-group dropdown-menu">
+                      <a href="#" class="list-group-item" @click="saveTxt">
+                        Download textfile
+                      </a>
+                    </ul>
+                  </dropdown>
                 </div>
-                <codemirror :value="localDotData" @change="updateDot" :options="editorOption" @ready="onEditorReady"></codemirror>
-                <theme-select></theme-select>
-              <!-- </div> -->
-          </div>
-          <multipane-resizer v-if="largeScreen"></multipane-resizer>
-          <div class="pane" :style="{ flexGrow: 1 }">
-            <!-- <div class="render-panel" :class="{'col-md-12': isMaximizedRender, 'col-md-8': !isMaximizedRender}"> -->
-              <nav class="navbar navbar-default">
-                  <div class="navbar-header pull-left">
-                    <a class="navbar-brand">Render
-                    </a>
-                    <!--
-                    resize feature disabled -> re-add later (needs to modify vue-multipane now)
-                    <button class="btn btn-default btn-xs navbar-btn" @click="toggleSize" title="Toggle size"><i :class="`glyphicon ${isMaximizedRender? 'glyphicon-resize-small': 'glyphicon-resize-full'}`"></i></button>
-                  -->
-                  </div>
-                  <div class="navbar-header pull-right">
-                    <export-tools></export-tools>
-                  </div>
-              </nav>
-              <graph-viz-render
-                :dot-data="localDotData"
-                @error="updateError"></graph-viz-render>
-            <!-- </div> -->
-          </div>
-          <!-- <multipane-resizer></multipane-resizer>
-          <div class="pane" :style="{ flexGrow: 1 }">
-            <div>
-              <h6 class="title is-6">Pane 3</h6>
+              </div>
+            </nav>
+            <div v-if="renderErrorMessage!=''" class="render-error"><small>{{renderErrorMessage}}</small>
             </div>
-          </div> -->
-        </multipane>
+            <!-- <textarea class="form-control" v-model="dotData"></textarea> -->
+            <codemirror :value="localDotData" @change="updateDot" :options="editorOption" @ready="onEditorReady"></codemirror>
+            <nav class="navbar navbar-default" role="navigation">
+              <ul class="nav navbar-nav">
+                <theme-select></theme-select>
+              </ul>
+            </nav>
+          </div>
+          <div class="col-md-8" :class="{maximize: isMaximizedRender}">
+            <nav class="navbar navbar-default">
+                <div class="navbar-header pull-left">
+                  <a class="navbar-brand">Render
+                  </a>
+                  <button class="btn btn-default btn-xs navbar-btn" @click="toggleSize" title="Toggle size"><i :class="`glyphicon ${isMaximizedRender? 'glyphicon-resize-small': 'glyphicon-resize-full'}`"></i></button>
+                </div>
+                <!-- <div class="btn-group navbar-right">
+                  <button type="button" name="button" class="btn btn-default navbar-btn">1</button>
+                  <button type="button" name="button" class="btn btn-default navbar-btn">2</button>
+                </div> -->
+                <div class="navbar-header pull-right">
+                  <export-tools></export-tools>
+                </div>
+            </nav>
+            <graph-viz-render
+              :dot-data="localDotData"
+              @error="updateError"></graph-viz-render>
+          </div>
         </div>
         <!-- <footer>Examples from <a href="http://www.graphviz.org/Gallery.php" target="_blank">http://www.graphviz.org/Gallery.php</a></footer> -->
       <!-- </div> -->
@@ -132,10 +121,8 @@ import exportTools from './ExportTools.vue'
 import modal from './Modal.vue'
 import spinner from './Spinner.vue'
 import alert from './Alert.vue'
-import { Multipane, MultipaneResizer } from 'vue-multipane'
+
 import '@/helpers/loadCodemirrorThemes.js'
-import pageBreakMixin from '@/mixins/PageBreak'
-// import 'codemirror/addon/selection/mark-selection'
 
 Vue.directive('focus', {
   // When the bound element is inserted into the DOM...
@@ -152,7 +139,6 @@ Vue.directive('focus', {
 })
 
 export default {
-  mixins: [ pageBreakMixin ],
   data () {
     return {
       $editor: undefined,
@@ -166,15 +152,13 @@ export default {
       saveReady: false,
       controlIconsEnabled: true,
       currentTheme: '',
-      editorWidth: 200,
       // localDotData: '',
       editorOption: {
         tabSize: 2,
         gutters: ['CodeMirror-linenumbers', 'markers'],
         viewportMargin: Infinity,
-        lineWrapping: false
-        // styleSelectedText: true
-        // scrollbarStyle: 'null'
+        lineWrapping: true,
+        scrollbarStyle: 'null'
       },
       isMaximizedRender: false
     }
@@ -186,8 +170,6 @@ export default {
     exportTools,
     graphVizRender,
     modal,
-    Multipane,
-    MultipaneResizer,
     spinner,
     themeSelect
   },
@@ -222,13 +204,6 @@ export default {
     // this.loadStorage()
     this.setData()
     console.log(this.$route, this) // todo check if id passed & route example
-
-    // setTimeout(() => {
-    //   const resizable = $('.render-panel').resizable({
-    //     direction: 'horizontal'
-    //   })
-    //   console.log('resizeable', resizable, $('.render-panel'))
-    // }, 100)
   },
   methods: {
     ...mapMutations([
@@ -278,13 +253,7 @@ export default {
       marker.innerHTML = `<span title="${this.renderErrorMessage}">●</span>`
       return marker
     },
-    resizeRender (e) {
-      // console.log('resize', e)
-      // onResize()
-      this.$store.dispatch('triggerPanzommResize')
-    },
     saveTxt () {
-      console.log('save file...')
       this.setFilename()
       let element = document.createElement('a')
       element.setAttribute('href', 'data:text/plain;charset=utf-8,' +
@@ -325,8 +294,7 @@ export default {
           // defined but a string --> use url params to load data
           console.log(this.$route)
           this.loadData(url).then(data => {
-            // this.localDotData = data
-            this.updateGraphData({data})
+            this.localDotData = data
             this.loaded = true
           }).catch((err) => {
             this.errorMessage = err.message
@@ -344,20 +312,11 @@ export default {
                 this.loaded = true
                 return
               }
-              // this.localDotData = graph.data
-              this.updateGraphData({data: graph.data})
+              this.localDotData = graph.data
               this.$store.commit('updateGraphData', graph)
               // console.log('loaded graph', graph)
             } else {
-              // console.log('graph query?', this.$route)
-              // if (this.$route.query.graph) { //<<<<<<< too complicated to pass --> better do saving server side like at jsfiddle
-              //   // this.localDotData = this.$route.query.graph // data passed in url with ?graph= query
-              //   this.$store.commit('updateGraphData', {
-              //     data: this.$route.query.graph
-              //   })
-              // } else {
-              // this.localDotData = this.$store.state.dotData // initial load data // <<<<<<<< is this really needed??
-              // }
+              this.localDotData = this.$store.state.dotData // initial load data
             }
             this.loaded = true
           } else {
@@ -398,13 +357,8 @@ export default {
       this.errorMessage = ''
     },
     loadData (url) {
-      return axios.get(`https://cors-anywhere.herokuapp.com/${url}`)
+      return axios.get(`https://crossorigin.me/${url}`)
       .then((response) => response.data)
-      .catch((response) => {
-        console.log('response', response)
-        this.errorMessage = response.message + ' - Please try again later.'
-        this.showError = true
-      })
     },
     // loadStorage () {
     //   this.storedGraphs = this.$ls.get('storedGraphs') || []
@@ -443,33 +397,27 @@ export default {
     save (name) {
       this.$store.commit('saveGraph', name)
     }
+    /* show (index) {
+    let data = this.examples[index].data
+    if (!data) {
+    let example = this.examples[index] // short hand
+    this.loadData(example.url).then((loadedData) => {
+    this.localDotData = loadedData
+    this.loaded = true
+  })
+} else {
+this.dotData = this.examples[index].data
+this.loaded = true
+}
+} */
   }
 }
 </script>
 
-<style lang="scss">
-// @import '~bulma';
-
-/*@media (min-width: 768px) {*/
-@media (min-width: 992px) {
-  .render-panel {
-    position:fixed;
-    right:0;
-
-    border-color: #F9F9F9;
-    border-left-style: solid;
-    border-width: 5px;
-    /*min-height: 200px;*/
-    cursor: col-resize;
-  }
-}
+<style lang="css">
 
 .navbar-default {
   margin-bottom: 0;
-}
-
-.dropdown-menu > .list-group {
-  margin-bottom: 0px;
 }
 
 /*.dropdown-menu {
@@ -495,24 +443,15 @@ a.router-link-active, li.router-link-active a {
   width: 10px;
 }
 
-/*.CodeMirror-selected {
-  mix-blend-mode: difference !important;
-  color: white !important;
-}*/
-
 .CodeMirror-scroll {
   height: auto;
   overflow-y: hidden;
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 
 .CodeMirror {
   border: 1px solid #eee;
   height: auto !important;
-}
-
-.CodeMirror pre {
-  z-index: 1 !important;
 }
 
 .render-error {
@@ -522,84 +461,15 @@ a.router-link-active, li.router-link-active a {
   margin-top: -20px;
 }
 
-// multipane styling
-.custom-resizer {
-  // height: 100%;
-  // height: 100vh !important;
+.maximize {
+  position: absolute;
+  left: 0;
+  top: 65px;
+  bottom: 0;
+  width: 100%;
+  /*width: 100vw;
+  height: 100vh;*/
+  z-index: 100;
+  background-color: white;
 }
-
-.layout-v > .multipane-resizer {
-  height: 85vh !important;
-}
-
-.multipane > div {
-    z-index: auto;
-}
-
-.custom-resizer > .pane {
-  text-align: left;
-  padding: 5px;
-  // overflow: hidden;
-  // overflow-y: scroll;
-  // background: #eee;
-  // border: 1px solid #ccc;
-  height: 100%;
-}
-.custom-resizer > .pane ~ .pane {
-}
-.custom-resizer > .multipane-resizer {
-  margin: 0; left: 0;
-  position: relative;
-  background: #f9f9f9;
-  border-radius: 4px;
-  &:before {
-    display: block;
-    content: "";
-    width: 5px;
-    height: 40px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -20px;
-    margin-left: -2.5px;
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    border-radius: 2px;
-    background-color: #d1d1d1;
-  }
-  &:after {
-      width: 5px;
-      display: block;
-      content: "";
-      height: 45px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      margin-top: -20px;
-      margin-left: -1.5px;
-
-  }
-  &:hover {
-    &:before {
-      border-color: #999;
-    }
-  }
-}
-
-.left-pane {
-  width: 50%;
-  min-width: 15%;
-}
-
-.full_width {
-  width: 100% !important;
-}
-
-@media(max-width: 768px) {
-  /* stack panes if smaller than 768px*/
-  .multipane.layout-v {
-    display: block;
-  }
-}
-
 </style>

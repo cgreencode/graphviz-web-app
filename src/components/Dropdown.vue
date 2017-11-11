@@ -1,10 +1,9 @@
 <template lang="html">
-  <component :is="tag" @click.prevent="toggle"
-    :class="{dropdown: dir == 'down', dropup: dir === 'up', open: visible}" v-on-clickaway="hideDropdown">
+  <component :is="tag" class="dropdown" :class="{open: isOpen}" v-on-clickaway="() => visible=false">
       <component
         :is="triggerTag"
         href="#"
-       :aria-expanded="visible"><slot name="trigger"></slot>
+        @click="toggle" :aria-expanded="visible"><slot name="trigger"></slot>
         <!-- class="dropdown-toggle" -->
       </component>
     <!-- <slot name="trigger" @click="toggle"></slot> -->
@@ -24,15 +23,12 @@ import {mixin as clickaway} from 'vue-clickaway'
 export default {
   data () {
     return {
-      visible: false
+      visible: false,
+      isOpen: false
     }
   },
   mixins: [clickaway],
   props: {
-    dir: {
-      type: String,
-      default: 'down'
-    },
     animationClass: {
       type: String,
       default: 'animated'
@@ -68,11 +64,11 @@ export default {
       this.visible = !this.visible
     },
     showDropdown () {
-      this.visible = true
+      this.isOpen = true
       this.$emit('show')
     },
     hideDropdown () {
-      this.visible = false
+      this.isOpen = false
       this.$emit('hide')
     }
   }

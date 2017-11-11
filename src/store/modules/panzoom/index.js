@@ -66,11 +66,6 @@ export default {
     zoomPos: undefined,
     size: undefined
   },
-  actions: {
-    triggerPanzommResize () {
-      onResize()
-    }
-  },
   // actions: {
   //   saveAsSvg ({commit, state}) {
   //     save((svg) => {
